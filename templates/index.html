@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Dublin's Fowl</title>
+  </head>
+  <body>
+    <div>
+      <h1>Hello, World!</h1>
+      <br />
+      <p>
+        Click <a href="/name-and-shame">here</a> to warn your fellow citizen of
+        new foul fowl
+      </p>
+      <p>Click <a href="/logout">here</a> to logout</p>
+      {% for message in get_flashed_messages() %}
+      {{ message }}
+      {% endfor %}
+      <h3>Posts:</h3>
+      {% for post in posts %}
+      <strong>Title:</strong> {{ post.title }}<br />
+      <strong>Description:</strong><br />
+      {{ post.description }}<br />
+      <br />
+      {% endfor %}
+    </div>
+  </body>
+</html>
