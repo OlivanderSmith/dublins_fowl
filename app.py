@@ -36,11 +36,16 @@ def login_required(f):
 # Route: Home Page
 @app.route('/')
 def home():
-    g.db = connect_db()
-    cur = g.db.execute('select * from posts')
-    # Below variable utilises list comprehension for displaying the posts
-    posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
-    g.db.close()
+    posts = []
+    try:
+        g.db = connect_db()
+        cur = g.db.execute('select * from posts')
+        # Below variable utilises list comprehension for displaying the posts
+        posts = [dict(title=row[0], description=row[1])
+                 for row in cur.fetchall()]
+        g.db.close()
+    except sqlite3.OperationalError:
+        flash("You have no DataBase")
     return render_template("index.html", posts=posts)
 
 
