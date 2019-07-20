@@ -1,25 +1,28 @@
-import sqlite3
 from functools import wraps
 from flask import (Flask, flash, g, redirect, render_template, request,
                    session, url_for)
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__)
 
-
 # connection to database
-app.database = "sample.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 
+# create the sqlalchemy object
+db = SQLAlchemy(app)
 
 # function for database connection
-def connect_db():
-    return sqlite3.connect(app.database)
-
+# we've replaced this with the SQLAlchemy connection
+# def connect_db():
+#    return sqlite3.connect(app.database)
 
 # Placeholder secret_key (must be replaced later)
 app.secret_key = 'My Precious'
 
-
 # login required decorator
+
+
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
