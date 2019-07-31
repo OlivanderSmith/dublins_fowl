@@ -6,23 +6,18 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# connection to database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+# config settings (includes DB connection, debugger, and secret_key)
+import os
+app.config.from_object(os.environ['APP_SETTINGS'])
 
 # create the sqlalchemy object
 db = SQLAlchemy(app)
 
-# function for database connection
-# we've replaced this with the SQLAlchemy connection
-# def connect_db():
-#    return sqlite3.connect(app.database)
+# after the above db is set up then we can import our tables from models.py
+from models import *
 
-# Placeholder secret_key (must be replaced later)
-app.secret_key = 'My Precious'
 
 # login required decorator
-
-
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -39,16 +34,7 @@ def login_required(f):
 # Route: Home Page
 @app.route('/')
 def home():
-    posts = []
-    try:
-        g.db = connect_db()
-        cur = g.db.execute('select * from posts')
-        # Below variable utilises list comprehension for displaying the posts
-        posts = [dict(title=row[0], description=row[1])
-                 for row in cur.fetchall()]
-        g.db.close()
-    except sqlite3.OperationalError:
-        flash("You have no DataBase")
+    posts = db.session.query(BlogPost).all()
     return render_template("index.html", posts=posts)
 
 
@@ -85,8 +71,3 @@ def logout():
 @login_required
 def name_and_shame():
     return render_template("name_and_shame.html")
-
-
-######################## Debugger #########################
-if __name__ == '__main__':
-    app.run(debug=True)
