@@ -9,6 +9,8 @@ app = Flask(__name__)
 # config settings (includes DB connection, debugger, and secret_key)
 import os
 app.config.from_object(os.environ['APP_SETTINGS'])
+# sanity check for environemt variable:
+print(os.environ['APP_SETTINGS'])
 
 # create the sqlalchemy object
 db = SQLAlchemy(app)
